@@ -1,21 +1,42 @@
 let hasBlackJack = false;
-let isAlive = true;
-let firstNumber = Math.floor(Math.random() * 10) + 2;
-let secondNumber = Math.floor(Math.random() * 10) + 2;
-let cards = [firstNumber, secondNumber];
-let sum = firstNumber + secondNumber;
+let isAlive = false;
+let cards = [];
+let sum = 0;
 let message = "";
 let messageEl = document.getElementById("message-el");
 let sumEl = document.getElementById("sum-el");
 let cardsEl = document.getElementById("cards-el");
-let gameStarted = false;
+
+let player = {
+    name: "Pablo",
+    chips: 1000
+};
+
+let playerEl = document.getElementById("player-el");
+playerEl.textContent = `${player.name}: ${player.chips}$`
 
 function startGame() {
+    isAlive = true;
+    let firstCard = getRandomCard();
+    let secondCard = getRandomCard();
+    cards = [firstCard, secondCard];
+    sum = cards[0] + cards[1];
     renderGame();
 }
 
+function getRandomCard() {
+    let randomCard = Math.floor(Math.random() * 13) + 1;
+
+    if (randomCard === 1) {
+        randomCard = 11;
+    } else if (randomCard > 10) {
+        randomCard = 10;
+    }
+
+    return randomCard;
+}
+
 function renderGame() {
-    gameStarted = true;
     if (sum <= 20) {
         message = "Do you want to pick another card?";
     } else if (sum === 21) {
@@ -39,8 +60,8 @@ function renderGame() {
 }
 
 function newCard() {
-    if (gameStarted) {
-        let newNumber = Math.floor(Math.random() * 10) + 2;
+    if (isAlive && !hasBlackJack) {
+        let newNumber = getRandomCard();
         cards.push(newNumber);
         sum += newNumber;
         renderGame();
